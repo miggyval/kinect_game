@@ -5,12 +5,12 @@ import numpy as np
 import math
 from perlin_noise import PerlinNoise
 
-@njit(parallel=True)
+@njit()
 def call(n, m, a, b, c, d, x):
     res = 100
     curve = np.zeros((n * res, m))
-    tau = np.zeros((n * res, m))
-    for i in range(n * res):
+    tau = np.zeros((n * res,))
+    for i in nb.prange(n * res):
         tau[i] = i / (res * n)
 
     for j in nb.prange(n):
@@ -89,7 +89,7 @@ class MyCubicSpline:
         
     
     def __call__(self):
-        n = self.y.shape[0]
+        n = self.y.shape[0] - 1
         m = self.y.shape[1]
         return call(n, m, self.a, self.b, self.c, self.d, self.x)
         
