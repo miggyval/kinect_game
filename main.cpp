@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <fstream>
+#include <unistd.h>
 
 #define PI 3.1415926535
 
@@ -78,7 +79,7 @@ int main(int argc, char** argv) {
         for (int k = 0; k < m; k++) {
             c[j][k] = z[j][k] - mu[j] * c[j + 1][k];
             b[j][k] = (a[j + 1][k] - a[j][k]) / h[j] - (h[j] * (c[j + 1][k] + 2 * c[j][k])) / 3;
-            d[j][k] = (c[j + 1][k] - c[j][j]) / (3 * h[j]);
+            d[j][k] = (c[j + 1][k] - c[j][k]) / (3 * h[j]);
         }
     }
     const int res = 100;
@@ -87,6 +88,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < res * n; i++) {
         tau[i] = (double)i / (double)(res);
     }
+
     for (int j = 0; j < n; j++) {
         for (int k = 0; k < m; k++) {
             for (int r = 0; r < res; r++) {
@@ -107,4 +109,6 @@ int main(int argc, char** argv) {
             fout << str;
         }
     }
+    fout.close();
+    execlp("python", "python", "plot.py", "", (char*)NULL);
 }
